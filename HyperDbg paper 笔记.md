@@ -56,7 +56,7 @@ Intel VT-x技术带有硬件辅助的内存管理单元(MMU)和第二级地址�
 
 - 第四部分：子系统接受到主机的命令，后端脚本引擎进行转译，然后在kernel mode或user mode中运行
 
-  ![](pics/Screenshot 2022-12-01 095732.png)
+  ![](https://github.com/SapphireStar/HyperDbg-Note/blob/main/pics/Screenshot%202022-12-01%20095732.png?raw=true)
 
 ### 事件触发接口
 
@@ -92,7 +92,7 @@ Condition：Condition就是使用逻辑表达式来控制事件的触发。
 
   如图所示，push rbx操作被设置了flag，在该操作被执行后，进程将暂停，但其他进程或线程依然在运行，其他线程调用了xor rdi rdi之后，rdi的内容被改变，最终输出的结果为错误结果。
 
-  ![](pics\Screenshot 2022-12-01 104355.png)
+  ![](https://github.com/SapphireStar/HyperDbg-Note/blob/main/pics/Screenshot%202022-12-01%20104355.png?raw=true)
 
   
 
@@ -102,11 +102,11 @@ Condition：Condition就是使用逻辑表达式来控制事件的触发。
 
   并且，HyperDbg能够做到从user-mode根据指令（例如SYSCALL指令）进入kernel-mode，在kernel-mode中执行下一条指令，由kernel-mode到user-mode的迁移也由Hyperdbg完成，例如，执行SYSRET或IRET将调试器从内核模式返回到用户模式。
 
-  ![](pics\Screenshot 2022-12-01 151824.png)
+  ![](https://github.com/SapphireStar/HyperDbg-Note/blob/main/pics/Screenshot%202022-12-01%20151824.png?raw=true)
 
 - step-over：HyperDbg的step-over机制与传统的step-in类似，不同的是，传统step-in设置Trap flag，而HyperDbg则将调用指令的长度发送给被调试程序。当调用完成后，触发硬件调试寄存器，并通知调试器下一条指令。由于其他线程或核心也可能触发硬件调试寄存器，因此HyperDbg会忽略来自其他进程id或线程id的Debug Breakpoint Exception。如下图所示：
 
-  ![](pics\Screenshot 2022-12-01 153924.png)
+  ![](https://github.com/SapphireStar/HyperDbg-Note/blob/main/pics/Screenshot%202022-12-01%20153924.png?raw=true)
 
   
 
@@ -134,7 +134,9 @@ Condition：Condition就是使用逻辑表达式来控制事件的触发。
 
 对于hypervisor-level 的debugger来说，实现安全的内存访问很有挑战性，因为可能会导致系统的停止或异常，例如，在VMX-root mode中访问超出限制的page。安全的内存访问机制对于检测恶意软件来说非常重要，因此HyperDbg使用了一系列方法来解决VMX memory management的复杂性。
 
+- 解决方案：Hyperdbg为了防止访问无效的page，会先检查page的有效性。hyperdbg使用intel TSX作为解决方案，TSX可以在不进行user-mode和kernel-mode切换的情况下一直异常/错误，hyperdbg利用这种能力来判断对目标地址的操作是否成功执行，来检查page是否有效。使用该方法进行有效性检测比传统的遍历方法要快三个数量级
 
+  
 
 
 

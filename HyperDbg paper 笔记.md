@@ -136,7 +136,10 @@ Condition：Condition就是使用逻辑表达式来控制事件的触发。
 
 - 解决方案：Hyperdbg为了防止访问无效的page，会先检查page的有效性。hyperdbg使用intel TSX作为解决方案，TSX可以在不进行user-mode和kernel-mode切换的情况下一直异常/错误，hyperdbg利用这种能力来判断对目标地址的操作是否成功执行，来检查page是否有效。使用该方法进行有效性检测比传统的遍历方法要快三个数量级
 
-  
+  使用方法如下图所示
+
+  ![](https://github.com/SapphireStar/HyperDbg-Note/blob/main/pics/Screenshot%202022-12-01%20201606.png?raw=true)
 
 
 
+- Reading and Writing Memory：由于从VMX-root模式直接访问用户空间地址的各种安全考虑，HyperDbg被设计成不直接访问内存，而是使用虚拟寻址方法来保留页表项，并将所需的用户模式物理地址映射到内核模式虚拟地址，以实现安全的内存读写访问。此外，PTE中的写启用位消除了对目标地址可写性的检查。

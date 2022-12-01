@@ -49,11 +49,14 @@ Intel VT-x技术带有硬件辅助的内存管理单元(MMU)和第二级地址�
 ### HyperDbg调用流程
 
 - 第一部分：HyperDbg在主机上，通过HyperDbg-CLI接受输入，通过Script Engine进行转译，并由Serial Interface，串口，来与客户机进行交互
+
 - 第二部分：事件触发流程根据图中各个子系统来决定
+
 - 第三部分：子系统利用EPT来执行操作
+
 - 第四部分：子系统接受到主机的命令，后端脚本引擎进行转译，然后在kernel mode或user mode中运行
 
-![](.\pics\Screenshot 2022-12-01 095732.png)
+  ![](pics/Screenshot 2022-12-01 095732.png)
 
 ### 事件触发接口
 
@@ -89,7 +92,7 @@ Condition：Condition就是使用逻辑表达式来控制事件的触发。
 
   如图所示，push rbx操作被设置了flag，在该操作被执行后，进程将暂停，但其他进程或线程依然在运行，其他线程调用了xor rdi rdi之后，rdi的内容被改变，最终输出的结果为错误结果。
 
-  ![](.\pics\Screenshot 2022-12-01 104355.png)
+  ![](pics\Screenshot 2022-12-01 104355.png)
 
   
 
@@ -99,11 +102,11 @@ Condition：Condition就是使用逻辑表达式来控制事件的触发。
 
   并且，HyperDbg能够做到从user-mode根据指令（例如SYSCALL指令）进入kernel-mode，在kernel-mode中执行下一条指令，由kernel-mode到user-mode的迁移也由Hyperdbg完成，例如，执行SYSRET或IRET将调试器从内核模式返回到用户模式。
 
-  ![](C:\Users\YSIR\OneDrive\Document\University\CPS4150\FinalProject\pics\Screenshot 2022-12-01 151824.png)
+  ![](pics\Screenshot 2022-12-01 151824.png)
 
 - step-over：HyperDbg的step-over机制与传统的step-in类似，不同的是，传统step-in设置Trap flag，而HyperDbg则将调用指令的长度发送给被调试程序。当调用完成后，触发硬件调试寄存器，并通知调试器下一条指令。由于其他线程或核心也可能触发硬件调试寄存器，因此HyperDbg会忽略来自其他进程id或线程id的Debug Breakpoint Exception。如下图所示：
 
-  ![](C:\Users\YSIR\OneDrive\Document\University\CPS4150\FinalProject\pics\Screenshot 2022-12-01 153924.png)
+  ![](pics\Screenshot 2022-12-01 153924.png)
 
   
 
